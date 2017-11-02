@@ -19,6 +19,10 @@
             <v-icon>cloud_upload</v-icon>
           </v-badge>
         </v-btn>
+        <v-btn flat v-if="isLoggedIn" @click="onLogOut()">
+          <v-icon left>exit_to_app</v-icon>
+          LogOut
+        </v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <main class="mt-5">
@@ -42,5 +46,29 @@
 </template>
 
 <script>
-
+  export default {
+    name: 'app',
+    computed: {
+      isLoggedIn () {
+        return this.$store.getters['user/isLoggedIn']
+      }
+    },
+    watch: {
+      isLoggedIn (newVal) {
+        if (newVal === true) {
+          this.$router.replace({name: 'Hello'})
+        } else {
+          this.$router.replace({name: 'LogIn'})
+        }
+      }
+    },
+    methods: {
+      onLogOut () {
+        this.$store.dispatch('user/logOut')
+      }
+    },
+    mounted () {
+      this.$store.dispatch('user/autoSignIn')
+    }
+  }
 </script>
