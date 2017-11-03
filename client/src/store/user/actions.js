@@ -19,7 +19,11 @@ export default {
         dispatch('signIn', user)
       })
       .catch((error) => {
-        console.log(error)
+        if (error.key === user.email && error.errorType === 'uniqueViolated') {
+          commit('setError', 'Email address already in use, use another or Sing In.')
+        } else {
+          commit('setError', error)
+        }
         commit('setIsLoggedIn', false)
         commit('setIsLoading', false)
       })
@@ -30,11 +34,16 @@ export default {
     const payload = user ? Object.assign({ strategy: 'local' }, user) : {}
     feathersClient.authenticate(payload)
       .then((token) => {
+        commit('clearError')
         commit('setIsLoggedIn', true)
         commit('setIsLoading', false)
       })
       .catch((error) => {
-        console.log(error)
+        if (error.type === 'FeathersError' && error.message === 'Invalid login') {
+          commit('setError', 'Invalid eMail or password.')
+        } else {
+          commit('setError', error)
+        }
         commit('setIsLoggedIn', false)
         commit('setIsLoading', false)
       })
