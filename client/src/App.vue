@@ -20,13 +20,15 @@
           </v-badge>
         </v-btn>
         <v-btn flat v-if="isLoggedIn" @click="onLogOut()">
-          <v-icon left>exit_to_app</v-icon>
-          LogOut
+          <v-icon>exit_to_app</v-icon>
+          <span class="hidden-xs-only">LogOut</span>
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <main class="mt-5">
-      <router-view></router-view>
+      <v-slide-y-reverse-transition mode="out-in">
+        <router-view></router-view>
+      </v-slide-y-reverse-transition>
     </main>
     <v-footer fixed app>
       <span>&copy; 2017</span>
@@ -56,7 +58,7 @@
     watch: {
       isLoggedIn (newVal) {
         if (newVal === true) {
-          this.$router.replace({name: 'Hello'})
+          this.$router.replace({name: 'I18NPage'})
         } else {
           this.$router.replace({name: 'LogIn'})
         }
@@ -69,6 +71,7 @@
     },
     mounted () {
       this.$store.dispatch('user/autoSignIn')
+      this.$store.dispatch('i18n/populateData')
     }
   }
 </script>
