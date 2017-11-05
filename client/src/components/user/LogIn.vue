@@ -81,32 +81,34 @@
         return this.password !== this.confirmPassword ? 'Passwords do not match' : ''
       },
       user () {
-        return this.$store.getters['user/isLoggedIn']
+        return this.$store.getters['auth/isLoggedIn']
       },
       error () {
-        return this.$store.getters['user/error']
+        return this.$store.getters['auth/errorOnOperation']
       },
       isLoading () {
-        return this.$store.getters['user/isLoading']
+        return this.$store.getters['auth/isOperationPending']
       },
       mode () {
-        return this.$store.getters['user/mode']
+        return this.$store.getters['auth/mode']
       }
     },
     methods: {
       onToggleLoginMode () {
-        this.$store.dispatch('user/toggleLoginMode')
+        this.$store.dispatch('auth/toggleLoginMode')
       },
       onLogIn () {
         const user = {email: this.email, password: this.password}
         if (this.mode === 'SingUp') {
-          this.$store.dispatch('user/signUp', user)
+          // TODO: Re-Implement this
+          // this.$store.dispatch('user/signUp', user)
         } else if (this.mode === 'SingIn') {
-          this.$store.dispatch('user/signIn', user)
+          this.$store.dispatch('auth/authenticate', user)
         }
       },
       onDismissed () {
-        this.$store.dispatch('user/clearError')
+        // TODO: Re-Implement this
+        // this.$store.dispatch('user/clearError')
       }
     }
   }

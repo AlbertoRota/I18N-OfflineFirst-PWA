@@ -17,7 +17,7 @@
             <v-btn
               fab small color="primary"
               @click.native="onOpenCreateDialog"
-              :disabled="this.isLoading"
+              :disabled="this.isOperationPending"
             >
               <v-icon dark>add</v-icon>
             </v-btn>
@@ -35,7 +35,7 @@
                       v-model="createdItem.key"
                       required></v-text-field>
                   </v-flex>
-                  <v-flex xs12 v-for="supportedLanguage in supportedLanguages">
+                  <v-flex xs12 v-for="supportedLanguage in supportedLanguages" :key="supportedLanguage">
                     <v-text-field
                       :name=supportedLanguage
                       :label=supportedLanguage
@@ -77,7 +77,7 @@
                 <v-btn
                   flat small icon color="error"
                   @click.native="onDeleteTranslation(props.item)"
-                  :disabled="this.isLoading"
+                  :disabled="this.isOperationPending"
                 >
                   <v-icon>delete_forever</v-icon>
                 </v-btn>
@@ -102,10 +102,10 @@
     },
     computed: {
       supportedLanguages () {
-        return this.$store.getters['i18n/supportedLanguages']
+        return this.$store.getters['translations/supportedLanguages']
       },
       translations () {
-        return this.$store.getters['i18n/translations']
+        return this.$store.getters['translations/list']
       },
       tableHeaders () {
         const out = []
@@ -122,22 +122,22 @@
         }
         return out
       },
-      error () {
-        return this.$store.getters['i18n/error']
+      errorOnOperation () {
+        return this.$store.getters['translations/errorOnOperation']
       },
-      isLoading () {
-        return this.$store.getters['i18n/isLoading']
+      isOperationPending () {
+        return this.$store.getters['translations/isOperationPending']
       }
     },
     methods: {
       onSaveEditDialog () {
-        this.$store.dispatch('i18n/updateTranslation', this.editedItem)
+        this.$store.dispatch('translations/update', this.editedItem)
       },
       onOpenEditDialog (item) {
         this.editedItem = Object.assign({}, item)
       },
       onSaveCreateDialog () {
-        this.$store.dispatch('i18n/createTranslation', this.createdItem)
+        this.$store.dispatch('translations/create', this.createdItem)
           .then(() => {
             this.showCreateDialog = false
           })
@@ -147,7 +147,7 @@
         this.showCreateDialog = true
       },
       onDeleteTranslation (translation) {
-        this.$store.dispatch('i18n/deleteTranslation', translation)
+        this.$store.dispatch('translations/remove', translation)
       }
     }
   }

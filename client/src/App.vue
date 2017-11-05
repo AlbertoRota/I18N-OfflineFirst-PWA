@@ -52,7 +52,7 @@
     name: 'app',
     computed: {
       isLoggedIn () {
-        return this.$store.getters['user/isLoggedIn']
+        return this.$store.getters['auth/isLoggedIn']
       },
       isOffline () {
         return this.$store.getters['offline/isOffline']
@@ -69,12 +69,13 @@
     },
     methods: {
       onLogOut () {
-        this.$store.dispatch('user/logOut')
+        this.$store.dispatch('auth/logout')
       }
     },
     mounted () {
-      this.$store.dispatch('user/autoSignIn')
-      this.$store.dispatch('i18n/populateData')
+      this.$store.dispatch('auth/authenticate').then(() =>
+        this.$store.dispatch('translations/find', { query: { $limit: 1 } })
+      )
     }
   }
 </script>

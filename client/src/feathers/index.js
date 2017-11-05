@@ -4,9 +4,9 @@ import socketio from 'feathers-socketio/client'
 import auth from 'feathers-authentication-client'
 import io from 'socket.io-client'
 
-import { store } from '../store'
+import { store } from '@/store'
 
-const socket = io('http://192.168.2.239:3030', {transports: ['websocket']})
+const socket = io('http://localhost:3030', {transports: ['websocket']})
 
 socket.on('connect', function () { store.dispatch('offline/setIsOffline', false) })
 socket.on('disconnect', function () { store.dispatch('offline/setIsOffline', true) })
