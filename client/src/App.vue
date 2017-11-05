@@ -7,7 +7,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-btn flat>
+        <v-btn flat v-if="isOffline">
           <v-badge color="warning">
             <span slot="badge">!</span>
             <v-icon>signal_wifi_off</v-icon>
@@ -53,6 +53,9 @@
     computed: {
       isLoggedIn () {
         return this.$store.getters['user/isLoggedIn']
+      },
+      isOffline () {
+        return this.$store.getters['offline/isOffline']
       }
     },
     watch: {

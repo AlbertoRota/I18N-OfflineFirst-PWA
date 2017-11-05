@@ -1,3 +1,3 @@
 export default {
-  i18nState: null
+  isOffline: true
 }

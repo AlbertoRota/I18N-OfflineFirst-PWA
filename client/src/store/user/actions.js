@@ -22,6 +22,7 @@ export default {
         if (error.key === user.email && error.errorType === 'uniqueViolated') {
           commit('setError', 'Email address already in use, use another or Sing In.')
         } else {
+          console.log(error)
           commit('setError', error)
         }
         commit('setIsLoggedIn', false)
@@ -42,6 +43,7 @@ export default {
         if (error.type === 'FeathersError' && error.message === 'Invalid login') {
           commit('setError', 'Invalid eMail or password.')
         } else {
+          console.log(error)
           commit('setError', error)
         }
         commit('setIsLoggedIn', false)
