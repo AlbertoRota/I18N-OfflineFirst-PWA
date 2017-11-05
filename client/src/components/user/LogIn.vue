@@ -98,7 +98,7 @@
         this.$store.dispatch('auth/toggleLoginMode')
       },
       onLogIn () {
-        const user = {email: this.email, password: this.password}
+        const user = {strategy: 'local', email: this.email, password: this.password}
         if (this.mode === 'SingUp') {
           // TODO: Re-Implement this
           // this.$store.dispatch('user/signUp', user)

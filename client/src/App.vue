@@ -73,9 +73,8 @@
       }
     },
     mounted () {
-      this.$store.dispatch('auth/authenticate').then(() =>
-        this.$store.dispatch('translations/find', { query: { $limit: 1 } })
-      )
+      this.$store.dispatch('auth/authenticate')
+      this.$store.dispatch('translations/find')
     }
   }
 </script>

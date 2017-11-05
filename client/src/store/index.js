@@ -56,7 +56,7 @@ export const store = new Vuex.Store({
       // TODO: Getters are not being loaded, fix it ans send a PullRequest
       getters: {
         isLoggedIn (state) {
-          return state.accessToken
+          return !!state.accessToken
         },
         errorOnOperation (state) {
           return state.errorOnAuthenticate || state.errorOnAuthenticate
