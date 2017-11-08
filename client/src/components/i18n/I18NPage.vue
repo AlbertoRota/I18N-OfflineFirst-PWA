@@ -129,29 +129,55 @@
       },
       editedItem () {
         return this.$store.getters['translations/currentCopy'] || {}
+      },
+      isOffline () {
+        return this.$store.getters['offline/isOffline']
       }
     },
     methods: {
       onSaveEditDialog () {
-        console.log('about to dispatch : ')
-        console.log(this.editedItem)
-        this.$store.dispatch('translations/update', [this.editedItem._id, this.editedItem, {}])
+        if (this.isOffline) {
+          this.$store.dispatch(
+            'offline/addOfflineOperation',
+            {type: 'translations/update', payload: [this.editedItem._id, this.editedItem, {}]}
+          )
+          this.$store.commit('translations/updateItem', this.editedItem)
+        } else {
+          this.$store.dispatch('translations/update', [this.editedItem._id, this.editedItem, {}])
+        }
       },
       onOpenEditDialog (item) {
         this.$store.commit('translations/setCurrent', item)
       },
       onSaveCreateDialog () {
-        this.$store.dispatch('translations/create', this.createdItem)
-          .then(() => {
-            this.showCreateDialog = false
-          })
+        if (this.isOffline) {
+          this.$store.dispatch(
+            'offline/addOfflineOperation',
+            {type: 'translations/create', payload: this.createdItem}
+          )
+          this.$store.commit('translations/addItem', this.editedItem)
+          this.showCreateDialog = false
+        } else {
+          this.$store.dispatch('translations/create', this.createdItem)
+            .then(() => {
+              this.showCreateDialog = false
+            })
+        }
       },
       onOpenCreateDialog () {
         this.createdItem = {}
         this.showCreateDialog = true
       },
       onDeleteTranslation (translation) {
-        this.$store.dispatch('translations/remove', translation._id)
+        if (this.isOffline) {
+          this.$store.dispatch(
+            'offline/addOfflineOperation',
+            {type: 'translations/remove', payload: translation._id}
+          )
+          this.$store.commit('translations/removeItem', translation._id)
+        } else {
+          this.$store.dispatch('translations/remove', translation._id)
+        }
       }
     }
   }
