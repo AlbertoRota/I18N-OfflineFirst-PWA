@@ -73,7 +73,7 @@
       }
     },
     mounted () {
-      this.$store.dispatch('auth/authenticate')
+      this.$store.dispatch('auth/authenticate').catch(() => this.$store.commit('auth/clearAuthenticateError'))
       this.$store.dispatch('translations/find')
     }
   }

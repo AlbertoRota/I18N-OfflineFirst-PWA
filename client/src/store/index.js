@@ -59,7 +59,7 @@ export const store = new Vuex.Store({
           return !!state.accessToken
         },
         errorOnOperation (state) {
-          return state.errorOnAuthenticate || state.errorOnAuthenticate
+          return state.errorOnAuthenticate || state.errorOnLogout
         },
         isOperationPending (state) {
           return state.isAuthenticatePending
