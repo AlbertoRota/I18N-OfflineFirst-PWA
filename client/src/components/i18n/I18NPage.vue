@@ -62,7 +62,7 @@
                 {{ props.item.key }}
               </td>
               <td class="text-xs-right" v-for="supportedLanguage in supportedLanguages">
-                <v-edit-dialog large lazy @open="onOpenEditDialog(props.item)" @save="onSaveEditDialog">
+                <v-edit-dialog large lazy @open="onOpenEditDialog(props.item)" @save="onSaveEditDialog()">
                   {{ props.item[supportedLanguage] ? props.item[supportedLanguage] : 'tbd' }}
                   <v-text-field
                     slot="input"
@@ -96,7 +96,6 @@
       return {
         search: '',
         createdItem: {},
-        editedItem: {},
         showCreateDialog: false
       }
     },
@@ -127,14 +126,19 @@
       },
       isOperationPending () {
         return this.$store.getters['translations/isOperationPending']
+      },
+      editedItem () {
+        return this.$store.getters['translations/currentCopy'] || {}
       }
     },
     methods: {
       onSaveEditDialog () {
-        this.$store.dispatch('translations/update', this.editedItem)
+        console.log('about to dispatch : ')
+        console.log(this.editedItem)
+        this.$store.dispatch('translations/update', [this.editedItem._id, this.editedItem, {}])
       },
       onOpenEditDialog (item) {
-        this.editedItem = Object.assign({}, item)
+        this.$store.commit('translations/setCurrent', item)
       },
       onSaveCreateDialog () {
         this.$store.dispatch('translations/create', this.createdItem)
@@ -147,7 +151,7 @@
         this.showCreateDialog = true
       },
       onDeleteTranslation (translation) {
-        this.$store.dispatch('translations/remove', translation)
+        this.$store.dispatch('translations/remove', translation._id)
       }
     }
   }

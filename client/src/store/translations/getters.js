@@ -17,5 +17,8 @@ export default {
       state.errorOnUpdate ||
       state.errorOnPatch ||
       state.errorOnRemove
+  },
+  currentCopy (state) {
+    return state.copy
   }
 }
