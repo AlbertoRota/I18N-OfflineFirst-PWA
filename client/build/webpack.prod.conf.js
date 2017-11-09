@@ -9,7 +9,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-var SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
+var WorkboxPlugin = require('workbox-webpack-plugin')
 var loadMinified = require('./load-minified')
 
 var env = process.env.NODE_ENV === 'testing'
@@ -101,12 +101,14 @@ var webpackConfig = merge(baseWebpackConfig, {
       }
     ]),
     // service worker caching
-    new SWPrecacheWebpackPlugin({
-      cacheId: 'my-vue-app',
-      filename: 'service-worker.js',
-      staticFileGlobs: ['dist/**/*.{js,html,css}'],
-      minify: true,
-      stripPrefix: 'dist/'
+    new WorkboxPlugin({
+      globDirectory: 'dist/',
+      globPatterns: ['**/*.{html,js,css}'],
+      // Register a custom service worker
+      // swSrc: './src/client/service-worker.js',
+      swDest: 'dist/service-worker.js',
+      clientsClaim: true,
+      skipWaiting: true
     })
   ]
 })
