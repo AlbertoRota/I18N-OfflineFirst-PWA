@@ -1,4 +1,4 @@
-import db from '../../feathers/offline'
+import db from '@/feathers/offline'
 
 export default {
   setIsOffline ({ commit }, offlineStatus) {
