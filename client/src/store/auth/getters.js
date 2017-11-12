@@ -1,14 +1,2 @@
-export default {
-  isLoggedIn (state) {
-    return !!state.accessToken
-  },
-  errorOnOperation (state) {
-    return state.errorOnAuthenticate || state.errorOnLogout
-  },
-  isOperationPending (state) {
-    return state.isAuthenticatePending
-  },
-  mode (state) {
-    return state.mode
-  }
-}
+// TODO: Replace with the contents of "authGettersFix/index.js" once "Feathers-vuex" allows custom getters
+export default {}
