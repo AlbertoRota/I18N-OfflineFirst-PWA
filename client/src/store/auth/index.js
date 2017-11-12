@@ -9,6 +9,7 @@ import feathersClient from '@/feathers'
 const { auth } = feathersVuex(feathersClient)
 
 export default auth({
+  userService: 'users',
   state: state,
   // TODO: Getters are not being loaded, fix it ans send a PullRequest
   getters: getters,
