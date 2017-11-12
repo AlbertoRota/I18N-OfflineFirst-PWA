@@ -1,6 +1,10 @@
 export default {
   supportedLanguages (state) {
-    return state.supportedLanguages
+    return [
+      'en_EN',
+      'es_ES',
+      'fr_FR'
+    ]
   },
   isOperationPending (state) {
     return state.isFindPending ||

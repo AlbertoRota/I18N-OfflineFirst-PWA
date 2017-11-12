@@ -83,6 +83,11 @@
         } else {
           this.$router.replace({name: 'LogIn'})
         }
+      },
+      isOffline (newVal) {
+        if (newVal === false) {
+          this.$store.dispatch('translations/find')
+        }
       }
     },
     methods: {
@@ -90,7 +95,6 @@
         if (this.isOffline) {
           this.$store.dispatch('offline/addOfflineOperation', {type: 'auth/logout'})
           this.$store.commit('auth/logout')
-          localStorage.removeItem('feathers-jwt')
         } else {
           this.$store.dispatch('auth/logout')
         }
@@ -98,11 +102,7 @@
     },
     mounted () {
       if (this.isOffline) {
-        var feathersJwt = localStorage.getItem('feathers-jwt')
-        if (feathersJwt) {
-          this.$store.dispatch('offline/addOfflineOperation', {type: 'auth/authenticate'})
-          this.$store.commit('auth/setAccessToken', feathersJwt)
-        }
+        this.$store.dispatch('offline/addOfflineOperation', {type: 'auth/authenticate'})
       } else {
         this.$store.dispatch('auth/authenticate').catch(() => this.$store.commit('auth/clearAuthenticateError'))
         this.$store.dispatch('translations/find')

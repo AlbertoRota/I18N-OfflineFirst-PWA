@@ -2,9 +2,12 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import offline from './offline'
+import authGettersFix from './authGettersFix'
+
 import translations from './translations'
 import auth from './auth'
-import authGettersFix from './authGettersFix'
+
+import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
@@ -15,6 +18,7 @@ export const store = new Vuex.Store({
   },
   plugins: [
     translations,
-    auth
+    auth,
+    createPersistedState()
   ]
 })
