@@ -19,10 +19,23 @@
             <v-icon>cloud_upload</v-icon>
           </v-badge>
         </v-btn>
-        <v-btn flat v-if="isLoggedIn" @click="onLogOut()">
-          <v-icon>exit_to_app</v-icon>
-          <span class="hidden-xs-only">LogOut</span>
-        </v-btn>
+        <v-dialog v-if="isLoggedIn" v-model="logOutDialog" persistent>
+          <v-btn dark flat slot="activator">
+            <v-icon left>exit_to_app</v-icon>
+            <span class="hidden-xs-only">LogOut</span>
+          </v-btn>
+          <v-card>
+            <v-card-title primary-title class="primary">
+              <h4 class="mb-0 white--text">LogOut?</h4>
+            </v-card-title>
+            <v-card-text>If you log out now, you will be unable to use the app in Off-line mode uptil you log in again while On-line</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" dark @click.native="logOutDialog = false">Keep me logged in</v-btn>
+              <v-btn color="error" flat @click.native="logOutDialog = false; onLogOut()">Log me out</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-toolbar-items>
     </v-toolbar>
     <main class="mt-5">
@@ -50,6 +63,11 @@
 <script>
   export default {
     name: 'app',
+    data () {
+      return {
+        logOutDialog: false
+      }
+    },
     computed: {
       isLoggedIn () {
         return this.$store.getters['auth/isLoggedIn']
@@ -69,12 +87,26 @@
     },
     methods: {
       onLogOut () {
-        this.$store.dispatch('auth/logout')
+        if (this.isOffline) {
+          this.$store.dispatch('offline/addOfflineOperation', {type: 'auth/logout'})
+          this.$store.commit('auth/logout')
+          localStorage.removeItem('feathers-jwt')
+        } else {
+          this.$store.dispatch('auth/logout')
+        }
       }
     },
     mounted () {
-      this.$store.dispatch('auth/authenticate').catch(() => this.$store.commit('auth/clearAuthenticateError'))
-      this.$store.dispatch('translations/find')
+      if (this.isOffline) {
+        var feathersJwt = localStorage.getItem('feathers-jwt')
+        if (feathersJwt) {
+          this.$store.dispatch('offline/addOfflineOperation', {type: 'auth/authenticate'})
+          this.$store.commit('auth/setAccessToken', feathersJwt)
+        }
+      } else {
+        this.$store.dispatch('auth/authenticate').catch(() => this.$store.commit('auth/clearAuthenticateError'))
+        this.$store.dispatch('translations/find')
+      }
     }
   }
 </script>
