@@ -1,7 +1,10 @@
+import db from '@/feathers/offline'
+
 export default {
-  offlineAction ({ commit }, offlineId) {
-    setTimeout(() => {
-      commit('offlineMutation', offlineId)
-    }, 1000)
+  setIsOffline ({ commit }, offlineStatus) {
+    commit('setIsOffline', offlineStatus)
+  },
+  addOfflineOperation ({ commit }, offlineOperation) {
+    db.pendingActions.add({type: offlineOperation.type, payload: offlineOperation.payload})
   }
 }

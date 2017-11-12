@@ -7,7 +7,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-btn flat>
+        <v-btn flat v-if="isOffline">
           <v-badge color="warning">
             <span slot="badge">!</span>
             <v-icon>signal_wifi_off</v-icon>
@@ -52,7 +52,10 @@
     name: 'app',
     computed: {
       isLoggedIn () {
-        return this.$store.getters['user/isLoggedIn']
+        return this.$store.getters['auth/isLoggedIn']
+      },
+      isOffline () {
+        return this.$store.getters['offline/isOffline']
       }
     },
     watch: {
@@ -66,12 +69,12 @@
     },
     methods: {
       onLogOut () {
-        this.$store.dispatch('user/logOut')
+        this.$store.dispatch('auth/logout')
       }
     },
     mounted () {
-      this.$store.dispatch('user/autoSignIn')
-      this.$store.dispatch('i18n/populateData')
+      this.$store.dispatch('auth/authenticate').catch(() => this.$store.commit('auth/clearAuthenticateError'))
+      this.$store.dispatch('translations/find')
     }
   }
 </script>

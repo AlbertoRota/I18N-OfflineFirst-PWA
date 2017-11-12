@@ -17,7 +17,7 @@
             <v-btn
               fab small color="primary"
               @click.native="onOpenCreateDialog"
-              :disabled="this.isLoading"
+              :disabled="this.isOperationPending"
             >
               <v-icon dark>add</v-icon>
             </v-btn>
@@ -35,7 +35,7 @@
                       v-model="createdItem.key"
                       required></v-text-field>
                   </v-flex>
-                  <v-flex xs12 v-for="supportedLanguage in supportedLanguages">
+                  <v-flex xs12 v-for="supportedLanguage in supportedLanguages" :key="supportedLanguage">
                     <v-text-field
                       :name=supportedLanguage
                       :label=supportedLanguage
@@ -62,7 +62,7 @@
                 {{ props.item.key }}
               </td>
               <td class="text-xs-right" v-for="supportedLanguage in supportedLanguages">
-                <v-edit-dialog large lazy @open="onOpenEditDialog(props.item)" @save="onSaveEditDialog">
+                <v-edit-dialog large lazy @open="onOpenEditDialog(props.item)" @save="onSaveEditDialog()">
                   {{ props.item[supportedLanguage] ? props.item[supportedLanguage] : 'tbd' }}
                   <v-text-field
                     slot="input"
@@ -77,7 +77,7 @@
                 <v-btn
                   flat small icon color="error"
                   @click.native="onDeleteTranslation(props.item)"
-                  :disabled="this.isLoading"
+                  :disabled="this.isOperationPending"
                 >
                   <v-icon>delete_forever</v-icon>
                 </v-btn>
@@ -96,16 +96,15 @@
       return {
         search: '',
         createdItem: {},
-        editedItem: {},
         showCreateDialog: false
       }
     },
     computed: {
       supportedLanguages () {
-        return this.$store.getters['i18n/supportedLanguages']
+        return this.$store.getters['translations/supportedLanguages']
       },
       translations () {
-        return this.$store.getters['i18n/translations']
+        return this.$store.getters['translations/list']
       },
       tableHeaders () {
         const out = []
@@ -122,32 +121,63 @@
         }
         return out
       },
-      error () {
-        return this.$store.getters['i18n/error']
+      errorOnOperation () {
+        return this.$store.getters['translations/errorOnOperation']
       },
-      isLoading () {
-        return this.$store.getters['i18n/isLoading']
+      isOperationPending () {
+        return this.$store.getters['translations/isOperationPending']
+      },
+      editedItem () {
+        return this.$store.getters['translations/currentCopy'] || {}
+      },
+      isOffline () {
+        return this.$store.getters['offline/isOffline']
       }
     },
     methods: {
       onSaveEditDialog () {
-        this.$store.dispatch('i18n/updateTranslation', this.editedItem)
+        if (this.isOffline) {
+          this.$store.dispatch(
+            'offline/addOfflineOperation',
+            {type: 'translations/update', payload: [this.editedItem._id, this.editedItem, {}]}
+          )
+          this.$store.commit('translations/updateItem', this.editedItem)
+        } else {
+          this.$store.dispatch('translations/update', [this.editedItem._id, this.editedItem, {}])
+        }
       },
       onOpenEditDialog (item) {
-        this.editedItem = Object.assign({}, item)
+        this.$store.commit('translations/setCurrent', item)
       },
       onSaveCreateDialog () {
-        this.$store.dispatch('i18n/createTranslation', this.createdItem)
-          .then(() => {
-            this.showCreateDialog = false
-          })
+        if (this.isOffline) {
+          this.$store.dispatch(
+            'offline/addOfflineOperation',
+            {type: 'translations/create', payload: this.createdItem}
+          )
+          this.$store.commit('translations/addItem', this.editedItem)
+          this.showCreateDialog = false
+        } else {
+          this.$store.dispatch('translations/create', this.createdItem)
+            .then(() => {
+              this.showCreateDialog = false
+            })
+        }
       },
       onOpenCreateDialog () {
         this.createdItem = {}
         this.showCreateDialog = true
       },
       onDeleteTranslation (translation) {
-        this.$store.dispatch('i18n/deleteTranslation', translation)
+        if (this.isOffline) {
+          this.$store.dispatch(
+            'offline/addOfflineOperation',
+            {type: 'translations/remove', payload: translation._id}
+          )
+          this.$store.commit('translations/removeItem', translation._id)
+        } else {
+          this.$store.dispatch('translations/remove', translation._id)
+        }
       }
     }
   }

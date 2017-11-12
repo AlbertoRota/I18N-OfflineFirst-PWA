@@ -1,16 +1,20 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import user from './user'
-import i18n from './i18n'
 import offline from './offline'
+import translations from './translations'
+import auth from './auth'
+import authGettersFix from './authGettersFix'
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   modules: {
-    user: user,
-    i18n: i18n,
-    offline: offline
-  }
+    offline: offline,
+    auth: authGettersFix
+  },
+  plugins: [
+    translations,
+    auth
+  ]
 })

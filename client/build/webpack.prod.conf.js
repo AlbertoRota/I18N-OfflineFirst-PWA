@@ -105,6 +105,12 @@ var webpackConfig = merge(baseWebpackConfig, {
       cacheId: 'my-vue-app',
       filename: 'service-worker.js',
       staticFileGlobs: ['dist/**/*.{js,html,css}'],
+      importScripts: [
+        { filename: 'static/js/swWindowScopeFix.js' },
+        { chunkName: 'manifest' },
+        { chunkName: 'vendor' },
+        { chunkName: 'sw' }
+      ],
       minify: true,
       stripPrefix: 'dist/'
     })

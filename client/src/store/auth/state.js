@@ -1,3 +1,3 @@
 export default {
-  isOffline: true
+  mode: 'SingUp'
 }
