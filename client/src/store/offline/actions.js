@@ -4,7 +4,16 @@ export default {
   setIsOffline ({ commit }, offlineStatus) {
     commit('setIsOffline', offlineStatus)
   },
-  addOfflineOperation ({ commit }, offlineOperation) {
-    db.pendingActions.add({type: offlineOperation.type, payload: offlineOperation.payload})
+  addOfflineOperation ({ rootState }, offlineOperation) {
+    db.pendingActions.add({
+      type: offlineOperation.type,
+      payload: offlineOperation.payload,
+      jwt: rootState.auth.accessToken
+    }).then(
+      navigator.serviceWorker.ready.then((registration) => {
+        registration.sync.register('offlineOperation')
+      })
+    )
+
   }
 }

@@ -155,7 +155,7 @@
             'offline/addOfflineOperation',
             {type: 'translations/create', payload: this.createdItem}
           )
-          this.$store.commit('translations/addItem', this.editedItem)
+          this.$store.commit('translations/addItem', this.createdItem)
           this.showCreateDialog = false
         } else {
           this.$store.dispatch('translations/create', this.createdItem)
