@@ -16,7 +16,49 @@ module.exports = function () {
   };
 
   // Initialize our service with any options it requires
-  app.use('/users', createService(options));
+  const users = createService(options);
+  users.docs = {
+    definitions: {
+      users: {
+        type: "object",
+        required: [
+          "text"
+        ],
+        properties: {
+          text: {
+            type: "string",
+            description: "The message text"
+          },
+          useId: {
+            type: "string",
+            description: "The id of the user"
+          }
+        }
+      },
+      "users list": {
+        type: "object",
+        required: [
+          "text"
+        ],
+        properties: {
+          text: {
+            type: "integer",
+            description: "The message text list"
+          },
+          useId: {
+            type: "integer",
+            description: "The id of the user list"
+          }
+        }
+      }
+    },
+    security: [
+      {
+        JWT: []
+      }
+    ],
+  }
+  app.use('/users', users);
 
   // Get our initialized service so that we can register hooks and filters
   const service = app.service('users');

@@ -20,6 +20,8 @@ const appHooks = require('./app.hooks');
 
 const authentication = require('./authentication');
 
+const swagger = require('feathers-swagger');
+
 const app = feathers();
 
 // Load app configuration
@@ -41,6 +43,45 @@ app.configure(socketio());
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
+app.configure(swagger({
+  docsPath: '/docs',
+  uiIndex: true,
+  info: {
+    title: 'A title',
+    description: 'A descriptions'
+  },
+  securityDefinitions: {
+    JWT: {
+      type: "apiKey",
+      name: "Authorization",
+      in: "header"
+    }
+  },
+  security: [
+    {
+      JWT: []
+    }
+  ],
+  definitions: {
+    authentication: {
+      "type": "object",
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "description": "The strategy to use. Ex.: 'local'"
+        },
+        "email": {
+          "type": "string",
+          "description": "The email of the user"
+        },
+        "password": {
+          "type": "string",
+          "description": "The password of the user"
+        }
+      }
+    }
+  }
+}));
 app.configure(authentication);
 // Set up our services (see `services/index.js`)
 app.configure(services);
