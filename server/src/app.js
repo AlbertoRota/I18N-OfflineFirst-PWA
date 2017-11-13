@@ -14,6 +14,8 @@ const socketio = require('feathers-socketio');
 const handler = require('feathers-errors/handler');
 const notFound = require('feathers-errors/not-found');
 
+const swagger = require('feathers-swagger');
+
 const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
@@ -33,6 +35,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Host the public folder
 app.use('/', feathers.static(app.get('public')));
+
+// Swagger config
+app.configure(swagger({
+    docsPath: '/docs',
+    uiIndex: true,
+    info: {
+    title: 'A test',
+    description: 'A description'
+    }
+    })
+);
 
 // Set up Plugins and providers
 app.configure(hooks());
