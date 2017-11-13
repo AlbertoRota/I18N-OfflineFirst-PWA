@@ -1,6 +1,7 @@
 */node_modules/
 */dist/
-*/data/
+# Hotfix to have some data
+# */data/
 npm-debug.log*
 test/unit/coverage
 test/e2e/reports
