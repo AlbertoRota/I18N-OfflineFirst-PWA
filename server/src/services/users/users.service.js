@@ -25,38 +25,65 @@ module.exports = function () {
           "text"
         ],
         properties: {
-          text: {
-            type: "string",
-            description: "The message text"
-          },
-          useId: {
+          _id: {
             type: "string",
             description: "The id of the user"
+          },
+          email: {
+            type: "string",
+            description: "The email of the user"
           }
         }
       },
       "users list": {
         type: "object",
-        required: [
-          "text"
-        ],
         properties: {
-          text: {
+          total: {
             type: "integer",
-            description: "The message text list"
+            description: "Number of results"
           },
-          useId: {
+          limit: {
             type: "integer",
-            description: "The id of the user list"
+            description: "Number of results to return"
+          },
+          skip: {
+            type: "integer",
+            description: "Number of results to skip"
+          },
+          data: {
+            type: "array",
+            items: {
+              $ref: "#/definitions/users"
+            }
           }
         }
       }
     },
-    security: [
-      {
-        JWT: []
-      }
-    ],
+    find: {
+      security: [
+        { bearer: [] }
+      ]
+    },
+    get: {
+      security: [
+        { bearer: [] }
+      ]
+    },
+    update: {
+      security: [
+        { bearer: [] }
+      ]
+    },
+    patch: {
+      security: [
+        { bearer: [] }
+      ]
+    },
+    remove: {
+      security: [
+        { bearer: [] }
+      ]
+    }
   }
   app.use('/users', users);
 

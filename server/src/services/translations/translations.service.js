@@ -67,6 +67,26 @@ module.exports = function () {
           }
         }
       }
+    },
+    create: {
+      security: [
+        { bearer: [] }
+      ]
+    },
+    update: {
+      security: [
+        { bearer: [] }
+      ]
+    },
+    patch: {
+      security: [
+        { bearer: [] }
+      ]
+    },
+    remove: {
+      security: [
+        { bearer: [] }
+      ]
     }
   }
 

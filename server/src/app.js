@@ -51,16 +51,14 @@ app.configure(swagger({
     description: 'A descriptions'
   },
   securityDefinitions: {
-    JWT: {
+    bearer: {
       type: "apiKey",
-      name: "Authorization",
+      name: "authorization",
       in: "header"
     }
   },
   security: [
-    {
-      JWT: []
-    }
+    { bearer: [] }
   ],
   definitions: {
     authentication: {
