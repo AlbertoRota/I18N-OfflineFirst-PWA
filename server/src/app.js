@@ -18,9 +18,8 @@ const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
 
-const authentication = require('./authentication');
-
 const swagger = require('feathers-swagger');
+const appSwagger =require('./doc/swagger/app.swagger')
 
 const app = feathers();
 
@@ -43,44 +42,8 @@ app.configure(socketio());
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
-app.configure(swagger({
-  docsPath: '/docs',
-  uiIndex: true,
-  info: {
-    title: 'A title',
-    description: 'A descriptions'
-  },
-  securityDefinitions: {
-    bearer: {
-      type: "apiKey",
-      name: "authorization",
-      in: "header"
-    }
-  },
-  security: [
-    { bearer: [] }
-  ],
-  definitions: {
-    authentication: {
-      "type": "object",
-      "properties": {
-        "strategy": {
-          "type": "string",
-          "description": "The strategy to use. Ex.: 'local'"
-        },
-        "email": {
-          "type": "string",
-          "description": "The email of the user"
-        },
-        "password": {
-          "type": "string",
-          "description": "The password of the user"
-        }
-      }
-    }
-  }
-}));
-app.configure(authentication);
+app.configure(swagger(appSwagger));
+
 // Set up our services (see `services/index.js`)
 app.configure(services);
 // Configure a middleware for 404s and the error handler

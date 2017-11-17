@@ -3,7 +3,7 @@ const createService = require('feathers-nedb');
 const createModel = require('../../models/users.model');
 const hooks = require('./users.hooks');
 const filters = require('./users.filters');
-const swaggerDoc = require('./users.swagger');
+const swaggerDoc = require('../../doc/swagger/users/users.swagger');
 
 module.exports = function () {
   const app = this;
