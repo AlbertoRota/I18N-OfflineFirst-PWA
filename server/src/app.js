@@ -18,7 +18,8 @@ const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
 
-const authentication = require('./authentication');
+const swagger = require('feathers-swagger');
+const appSwagger =require('./doc/swagger/app.swagger')
 
 const app = feathers();
 
@@ -41,7 +42,8 @@ app.configure(socketio());
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
-app.configure(authentication);
+app.configure(swagger(appSwagger));
+
 // Set up our services (see `services/index.js`)
 app.configure(services);
 // Configure a middleware for 404s and the error handler

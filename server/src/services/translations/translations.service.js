@@ -3,6 +3,7 @@ const createService = require('feathers-nedb');
 const createModel = require('../../models/translations.model');
 const hooks = require('./translations.hooks');
 const filters = require('./translations.filters');
+const swaggerDoc = require('../../doc/swagger/translations/translations.swagger');
 
 module.exports = function () {
   const app = this;
@@ -16,7 +17,10 @@ module.exports = function () {
   };
 
   // Initialize our service with any options it requires
-  app.use('/translations', createService(options));
+  const translations = createService(options);
+  translations.docs = swaggerDoc;
+
+  app.use('/translations', translations);
 
   // Get our initialized service so that we can register hooks and filters
   const service = app.service('translations');
